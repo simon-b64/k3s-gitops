@@ -4,6 +4,8 @@ metadata:
   name: k3s-gitops-argo-application
   namespace: argocd
 spec:
+  project: default
+
   source:
     repoURL: git@github.com:simon-b64/k3s-gitops.git
     targetRevision: HEAD
