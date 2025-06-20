@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: k3s-gitops-argo-application
+  namespace: argocd
+spec:
+  source:
+    repoURL: git@github.com:simon-b64/k3s-gitops.git
+    targetRevision: HEAD
+    path: dev
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      selfHeal: true
+      prune: true
