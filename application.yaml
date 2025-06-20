@@ -7,7 +7,7 @@ spec:
   project: default
 
   source:
-    repoURL: git@github.com:simon-b64/k3s-gitops.git
+    repoURL: https://github.com/simon-b64/k3s-gitops.git
     targetRevision: HEAD
     path: dev
 
