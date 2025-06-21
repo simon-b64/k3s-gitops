@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: test-sleep
 spec:
-  replicas: 1
+  replicas: 5
   selector:
     matchLabels:
       app: test-sleep
