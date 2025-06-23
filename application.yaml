@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: k3s-gitops-argo-application-crd
+  name: k3s-gitops-crd
   namespace: argocd
 spec:
   project: default
@@ -30,10 +30,41 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: k3s-gitops-argo-application
+  name: k3s-gitops-secrets
   namespace: argocd
   annotations:
-    argocd.argoproj.io/depends-on: argocd/k3s-gitops-argo-application-crd
+    argocd.argoproj.io/depends-on: argocd/k3s-gitops-crd
+spec:
+  project: default
+
+  source:
+    directory:
+      recurse: true
+    repoURL: https://github.com/simon-b64/k3s-secrets.git
+    targetRevision: HEAD
+    path: secrets
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      selfHeal: false
+      prune: true
+      allowEmpty: true
+
+---
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: k3s-gitops-applications
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/depends-on: argocd/k3s-gitops-secrets
 spec:
   project: default
 
