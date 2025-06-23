@@ -40,7 +40,7 @@ spec:
   source:
     directory:
       recurse: true
-    repoURL: https://github.com/simon-b64/k3s-secrets.git
+    repoURL: git@github.com:simon-b64/k3s-secrets.git
     targetRevision: HEAD
     path: secrets
 
