@@ -1,0 +1,54 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: democratic-csi
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/depends-on: argocd/democratic-csi-snapshot-controller
+spec:
+  project: default
+  source:
+    repoURL: https://democratic-csi.github.io/charts/
+    targetRevision: 0.15.0
+    chart: democratic-csi
+    helm:
+      # Use your values with secret references
+      values: |
+        csiDriver:
+          name: "org.democratic-csi.nfs"
+        storageClasses:
+          - name: freenas-nfs-csi
+            defaultClass: false
+            reclaimPolicy: Delete
+            volumeBindingMode: Immediate
+            allowVolumeExpansion: true
+            parameters:
+              fsType: nfs
+              detachedVolumesFromSnapshots: "false"
+            mountOptions:
+              - noatime
+              - nfsvers=4
+            secrets:
+              provisioner-secret:
+              controller-publish-secret:
+              node-stage-secret:
+              node-publish-secret:
+              controller-expand-secret:
+        volumeSnapshotClasses:
+        - name: nfs-snapshot
+          parameters:
+            detachedSnapshots: "true"
+        driver:
+          existingConfigSecret: truenas-nfs-driver-config
+          config:
+            driver: freenas-api-nfs
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: democratic-csi
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
