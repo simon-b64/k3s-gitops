@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: democratic-csi
+  name: nfs-democratic-csi
   namespace: argocd
   annotations:
     argocd.argoproj.io/depends-on: argocd/democratic-csi-snapshot-controller
